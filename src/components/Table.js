@@ -1,6 +1,7 @@
 import React from 'react';
 
 import dataset from '../dataset.json';
+import TableHeader from './TableHeader.js';
 
 
 class Table extends React.Component {
@@ -111,6 +112,7 @@ class Table extends React.Component {
 				{data.length && data.map((item, index) => {
 					return(
 						<div>
+							<TableHeader/>
 							{item.ID}
 							{item.Name}
 							{item.City}
