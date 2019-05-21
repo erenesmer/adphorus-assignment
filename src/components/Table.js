@@ -1,8 +1,19 @@
 import React from 'react';
+import styled from 'styled-components';
 
-import dataset from '../dataset.json';
 import TableHeader from './TableHeader.js';
+import dataset from '../dataset.json';
 
+const Container = styled.div`
+	width: 90%;
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-self: center;
+	align-content: center;
+	margin: 100px 0px;
+	border: 1px solid #fafafa;
+`
 
 class Table extends React.Component {
 	constructor(props) {
@@ -106,9 +117,9 @@ class Table extends React.Component {
 	render() {
 		const { data } = this.state;
 		console.log(this.state);
-		if (!data.length) { return (<div><h2>Item Not Found</h2></div>); }
+		if (!data.length) { return (<Container><h2>Item Not Found</h2></Container>); }
 		return (
-			<div>
+			<Container>
 				{data.length && data.map((item, index) => {
 					return(
 						<div>
@@ -120,7 +131,7 @@ class Table extends React.Component {
 						</div>
 					)
 				})}
-			</div>
+			</Container>
 		);
 	};
 
