@@ -1,18 +1,21 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import TableHeader from './TableHeader.js';
+import TableItem from './TableItem';
+import TableHeader from './TableHeader';
+
 import dataset from '../dataset.json';
 
-const Container = styled.div`
-	width: 90%;
-	display: flex;
-	flex: 1;
-	flex-direction: column;
-	align-self: center;
-	align-content: center;
-	margin: 100px 0px;
-	border: 1px solid #fafafa;
+
+const Div = styled.div`
+		width: 90%;
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		align-self: center;
+		align-content: center;
+		margin: 100px 0px;
+		border: 1px solid #fafafa;
 `
 
 class Table extends React.Component {
@@ -20,22 +23,21 @@ class Table extends React.Component {
 		super(props);
 
 		this.state = {
-			data: []
+			data: [],
 		};
 
 		this.parseData = this.parseData.bind(this);
 	}
 
 	componentDidMount() {
-		console.log(dataset);
 		this.parseData(dataset);
 	}
 
 	parseData(data) {
-		// set childs of parents
+		// Set childs of parents
 		let parsedDataset = this.setChildsOfParent(data);
 
-		// exclude non-parent items
+		// Exclude non-parent items
 		parsedDataset = this.excludeChilds(parsedDataset);
 
 		this.setState({
@@ -46,7 +48,7 @@ class Table extends React.Component {
 	setChildsOfParent = data => {
 		let childsOfParent = data;
 
-		childsOfParent.map(iteratingData => {
+		childsOfParent.forEach(iteratingData => {
 			// If data has parent
 			if (iteratingData.hasOwnProperty('parentID') && iteratingData.parentID !== iteratingData.ID) {
 				const parentItemIndex = childsOfParent.findIndex(parsed => parsed.ID === iteratingData.parentID);
@@ -69,9 +71,9 @@ class Table extends React.Component {
 	excludeChilds = data => {
 		const excludedData = data.filter(iteratingData => {
 			if (iteratingData.hasOwnProperty('parentID')) {
-				if (iteratingData.parentID === iteratingData.ID) {
-					return true;
-				}
+				// if (iteratingData.parentID === iteratingData.ID) {
+				// 	return true;
+				// }
 
 				if (this.isParentExists(iteratingData.ID, data)) {
 					return false
@@ -84,7 +86,9 @@ class Table extends React.Component {
 	}
 
 	isParentExists = (id, dataset) => {
-		return dataset.some(data => data.ID === id) ? true : false;
+		if (dataset.some(data => data.ID === id)) {
+			return true;
+		}
 	}
 
 	removeItemFromDataset = itemPath => {
@@ -96,7 +100,7 @@ class Table extends React.Component {
 		itemPath.shift();
 
 		if (itemPath.length > 0) {
-			itemPath.map((searchingPath, index) => {
+			itemPath.forEach((searchingPath, index) => {
 				const indexOfSearchingPath = item.childs.findIndex(child => child.ID === searchingPath);
 
 				if (itemPath.length - 1 === index) {
@@ -116,25 +120,32 @@ class Table extends React.Component {
 
 	render() {
 		const { data } = this.state;
-		console.log(this.state);
-		if (!data.length) { return (<Container><h2>Item Not Found</h2></Container>); }
+		if (!data.length) {
+			return (
+				<Div className="notFoundContainer">
+					<h2>Item Not Found</h2>
+				</Div>
+			);
+		}
 		return (
-			<Container>
-				{data.length && data.map((item, index) => {
-					return(
-						<div>
-							<TableHeader/>
-							{item.ID}
-							{item.Name}
-							{item.City}
-							{item.Phone}
-						</div>
-					)
-				})}
-			</Container>
-		);
-	};
+			<Div className="table">
+				<TableHeader />
 
+				{data.length && data.map((item, index) => {
+					return (
+						<TableItem
+							removeItemFromDataset={this.removeItemFromDataset}
+							item={item}
+							parentPath={[item.ID]}
+							key={index}
+							isChild={false}
+						/>
+					)
+				}
+				)}
+			</Div>
+		);
+	}
 }
 
 export default Table;

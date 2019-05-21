@@ -10,6 +10,10 @@ const Container = styled.div`
 	align-content: space - between;
 	color: #000;
 	height: 45px;
+
+	> .center {
+		justify-content: center;
+	}
 `
 
 const Column = styled.div`
@@ -19,18 +23,16 @@ const Column = styled.div`
 	padding: 10px 20px;
 `
 
-class TableHeader extends React.Component {
-	render() {
-		return (
-			<Container>
-				<Column>ID</Column>
-				<Column>Name</Column>
-				<Column>City</Column>
-				<Column>Phone</Column>
-				<Column>Delete</Column>
-			</Container>
-		)
-	}
+const TableHeader = () => {
+	return (
+		<Container className="tableHeader">
+			<Column>ID</Column>
+			<Column>Name</Column>
+			<Column>City</Column>
+			<Column>Phone</Column>
+			<Column className="center">Actions</Column>
+		</Container>
+	);
 }
 
 export default TableHeader;
